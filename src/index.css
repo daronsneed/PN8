@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Soft Slate Theme
+   Gentle dark mode with deep blue-grays, easy on the eyes
+*/
+
+@layer base {
+  :root {
+    --background: 220 20% 14%;
+    --foreground: 220 15% 90%;
+
+    --card: 220 20% 17%;
+    --card-foreground: 220 15% 90%;
+
+    --popover: 220 20% 17%;
+    --popover-foreground: 220 15% 90%;
+
+    --primary: 200 80% 60%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 220 18% 22%;
+    --secondary-foreground: 220 15% 85%;
+
+    --muted: 220 18% 20%;
+    --muted-foreground: 220 12% 55%;
+
+    --accent: 32 70% 55%;
+    --accent-foreground: 220 20% 10%;
+
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 18% 28%;
+    --input: 220 18% 32%;
+    --ring: 200 80% 60%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 220 20% 15%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 200 80% 60%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 18% 22%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 220 18% 28%;
+    --sidebar-ring: 200 80% 60%;
+  }
+
+  .dark {
+    --background: 220 20% 14%;
+    --foreground: 220 15% 90%;
+
+    --card: 220 20% 17%;
+    --card-foreground: 220 15% 90%;
+
+    --popover: 220 20% 17%;
+    --popover-foreground: 220 15% 90%;
+
+    --primary: 200 80% 60%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 220 18% 22%;
+    --secondary-foreground: 220 15% 85%;
+
+    --muted: 220 18% 20%;
+    --muted-foreground: 220 12% 55%;
+
+    --accent: 32 70% 55%;
+    --accent-foreground: 220 20% 10%;
+
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 18% 28%;
+    --input: 220 18% 32%;
+    --ring: 200 80% 60%;
+
+    --sidebar-background: 220 20% 15%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 200 80% 60%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 18% 22%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 220 18% 28%;
+    --sidebar-ring: 200 80% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom scrollbar for modern look */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.3);
+  }
+}
