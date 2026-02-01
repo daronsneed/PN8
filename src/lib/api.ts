@@ -1,4 +1,8 @@
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
+if (!API_BASE_URL) {
+  throw new Error("Missing VITE_BACKEND_URL");
+}
 
 class ApiError extends Error {
   constructor(message: string, public status: number, public data?: unknown) {
