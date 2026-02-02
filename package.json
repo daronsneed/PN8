@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "cd backend && bun install && bunx prisma generate"
   },
