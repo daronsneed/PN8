@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
@@ -7,7 +6,6 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { emailOTP } from "better-auth/plugins";
 import { Resend } from "resend";
-import { z } from "zod";
 
 // Environment
 const env = {
@@ -215,4 +213,52 @@ app.delete("/api/scene-presets/:id", async (c) => {
 // Sample route
 app.get("/api/sample", (c) => c.json({ data: { message: "Hello from PN8 API!", timestamp: new Date().toISOString() } }));
 
-export default handle(app);
+// Vercel serverless handler - convert Node.js request to Web Request
+export default async function handler(req: any, res: any) {
+  try {
+    // Build URL
+    const protocol = req.headers["x-forwarded-proto"] || "https";
+    const host = req.headers["x-forwarded-host"] || req.headers.host;
+    const url = new URL(req.url || "/", `${protocol}://${host}`);
+
+    // Build headers
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (value) headers.set(key, Array.isArray(value) ? value.join(", ") : value);
+    }
+
+    // Build body
+    let body: BodyInit | null = null;
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      const chunks: Buffer[] = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      if (chunks.length > 0) {
+        body = Buffer.concat(chunks);
+      }
+    }
+
+    // Create Web Request
+    const request = new Request(url.toString(), {
+      method: req.method,
+      headers,
+      body,
+    });
+
+    // Call Hono
+    const response = await app.fetch(request);
+
+    // Send response
+    res.status(response.status);
+    response.headers.forEach((value, key) => {
+      res.setHeader(key, value);
+    });
+    
+    const responseBody = await response.arrayBuffer();
+    res.end(Buffer.from(responseBody));
+  } catch (error) {
+    console.error("Handler error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
