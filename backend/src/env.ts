@@ -11,6 +11,8 @@ const envSchema = z.object({
   BACKEND_URL: z.url("BACKEND_URL must be a valid URL").default("http://localhost:3000"), // Set via the Vibecode enviroment at run-time
   DATABASE_URL: z.string().default("file:./dev.db"),
   BETTER_AUTH_SECRET: z.string().min(1, "BETTER_AUTH_SECRET is required"),
+  // Email (optional - falls back to console logging if not set)
+  RESEND_API_KEY: z.string().optional(),
 });
 
 /**
