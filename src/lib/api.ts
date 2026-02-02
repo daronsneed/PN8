@@ -17,8 +17,8 @@ interface ApiResponse<T> {
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
-
+  const url = `${API_BASE_URL.replace(/\/$/, "")}${endpoint}`;
+  
   const config: RequestInit = {
     ...options,
     headers: {
@@ -48,9 +48,15 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   // 2. JSON responses: parse and unwrap { data }
   const contentType = response.headers.get("content-type");
   if (contentType?.includes("application/json")) {
-    const json: ApiResponse<T> = await response.json();
-    return json.data;
-  }
+    const json = await response.json().catch(() => null);
+
+// If the API uses { data: ... }, unwrap it.
+// Otherwise return the JSON directly (covers null, arrays, plain objects).
+if (json && typeof json === "object" && "data" in (json as any)) {
+  return (json as any).data as T;
+}
+
+return json as T;  }
 
   // 3. Non-JSON: return undefined (caller should use api.raw() for these)
   return undefined as T;
@@ -58,7 +64,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 // Raw request for non-JSON endpoints (uploads, downloads, streams)
 async function rawRequest(endpoint: string, options: RequestInit = {}): Promise<Response> {
-  const url = `${API_BASE_URL}${endpoint}`;
+ const url = `${API_BASE_URL.replace(/\/$/, "")}${endpoint}`;
   const config: RequestInit = {
     ...options,
     headers: {
