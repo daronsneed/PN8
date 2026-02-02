@@ -29,23 +29,29 @@ export const auth = betterAuth({
         if (type !== "sign-in") return;
 
         if (resend) {
-          await resend.emails.send({
-            from: "PN8 <daron@mail.pn8.ai>",
-            to: email,
-            subject: "Your PN8 verification code",
-            text: `Your verification code is: ${otp}\n\nThis code expires in 5 minutes.`,
-            html: `
-              <div style="font-family: sans-serif; max-width: 400px; margin: 0 auto;">
-                <h2 style="color: #333;">Your verification code</h2>
-                <p style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #000;">${otp}</p>
-                <p style="color: #666;">This code expires in 5 minutes.</p>
-              </div>
-            `,
-          });
-          console.log(`[EMAIL] OTP sent to ${email}`);
+          try {
+            const result = await resend.emails.send({
+              from: "PN8 <daron@mail.pn8.ai>",
+              to: email,
+              subject: "Your PN8 verification code",
+              text: `Your verification code is: ${otp}\n\nThis code expires in 5 minutes.`,
+              html: `
+                <div style="font-family: sans-serif; max-width: 400px; margin: 0 auto;">
+                  <h2 style="color: #333;">Your verification code</h2>
+                  <p style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #000;">${otp}</p>
+                  <p style="color: #666;">This code expires in 5 minutes.</p>
+                </div>
+              `,
+            });
+            console.log(`[EMAIL] OTP sent to ${email}`, result);
+          } catch (error) {
+            console.error(`[EMAIL] Failed to send OTP to ${email}:`, error);
+            // Still log the OTP so user can proceed in case of email failure
+            console.log(`[EMAIL] OTP for ${email}: ${otp}`);
+          }
         } else {
           // Fallback for local development without Resend
-          console.log(`[EMAIL] OTP for ${email}: ${otp}`);
+          console.log(`[EMAIL] RESEND_API_KEY not set - OTP for ${email}: ${otp}`);
         }
       },
     }),
