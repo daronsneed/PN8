@@ -138,6 +138,9 @@ app.route("/api/scene-presets", scenePresetsRouter);
 
 const port = Number(process.env.PORT) || 3000;
 
+// Export app for Vercel serverless
+export { app };
+
 export default {
   port,
   fetch: app.fetch,
