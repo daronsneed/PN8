@@ -4,12 +4,12 @@
   "installCommand": "bun install",
   "framework": null,
   "functions": {
-    "backend/api/index.ts": {
-      "runtime": "@vercel/node@4.0.0"
+    "api/index.ts": {
+      "runtime": "@vercel/node@3"
     }
   },
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/backend/api" },
-    { "source": "/health", "destination": "/backend/api" }
+    { "source": "/api/:path*", "destination": "/api" },
+    { "source": "/health", "destination": "/api" }
   ]
 }
