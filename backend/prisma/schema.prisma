@@ -3,18 +3,19 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id
+  id            String        @id
   name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  email         String        @unique
+  emailVerified Boolean       @default(false)
+  image         String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   sessions      Session[]
   accounts      Account[]
   prompts       SavedPrompt[]
@@ -28,7 +29,7 @@ model Session {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
-  userAgent String?
+  userAgent String?  @db.Text
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -39,9 +40,9 @@ model Account {
   providerId            String
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -64,11 +65,11 @@ model SavedPrompt {
   userId             String
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name               String
-  prompt             String
-  selections         String   // JSON string
-  customValues       String   // JSON string
-  image              String?  // thumbnail base64
-  imageFull          String?  // full size base64
+  prompt             String   @db.Text
+  selections         String   @db.Text // JSON string
+  customValues       String   @db.Text // JSON string
+  image              String?  @db.Text // thumbnail base64
+  imageFull          String?  @db.Text // full size base64
   selectedLensId     String?
   selectedLensStyle  String?
   selectedCameraId   String?
@@ -83,7 +84,7 @@ model ScenePreset {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name      String
   category  String   // 'action', 'wardrobe', or 'environment'
-  value     String   // The custom text value
+  value     String   @db.Text // The custom text value
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

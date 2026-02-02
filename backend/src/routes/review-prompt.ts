@@ -43,7 +43,7 @@ ${prompt}`,
         );
       }
 
-      const data = await response.json();
+      const data = await response.json() as { output?: { content?: { text?: string }[] }[] };
       // Extract text from OpenAI responses API structure
       const suggestions = data.output?.[0]?.content?.[0]?.text || "";
 
