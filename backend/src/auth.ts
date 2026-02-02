@@ -30,7 +30,7 @@ export const auth = betterAuth({
 
         if (resend) {
           await resend.emails.send({
-            from: "PN8 <noreply@pn8.ai>",
+            from: "PN8 <daron@mail.pn8.ai>",
             to: email,
             subject: "Your PN8 verification code",
             text: `Your verification code is: ${otp}\n\nThis code expires in 5 minutes.`,
